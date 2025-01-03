@@ -1,0 +1,17 @@
+{
+    "C_Cpp.intelliSenseEngine": "default",
+    "idf.espIdfPathWin": "d:\\Embedded\\esp32\\IDF\\esp-idf-v5.1.1",
+    "idf.toolsPathWin": "C:\\Users\\nguye\\.espressif",
+    "files.associations": {
+        "gc9a01.h": "c",
+        "spi_master.h": "c",
+        "gpio.h": "c",
+        "bitset": "c",
+        "algorithm": "c",
+        "esp_spiffs.h": "c",
+        "oled.h": "c",
+        "output.h": "c"
+    },
+    "idf.flashType": "UART",
+    "idf.portWin": "COM3"
+}
