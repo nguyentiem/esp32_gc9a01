@@ -29,10 +29,44 @@ menu "Example Configuration"
             But please note that ESP chips don't support 5V IO, you need to add external
             level-shifting circuits between ESP chip to the EEPROM.
             
-    config EXAMPLE_SPIFFS_CHECK_ON_START
-        bool "Run SPIFFS_check on every start-up"
-        default y
+    config EXAMPLE_FATFS_MODE_READ_ONLY
+        bool "Read only mode for generated FATFS image"
+        default n
         help
-            If this config item is set, esp_spiffs_check() will be run on every start-up.
-            Slow on large flash sizes.
+            If read-only mode is set, the generated fatfs image will be raw (without wear levelling support).
+            Otherwise it will support wear levelling that enables read-write mounting.
+                
+    config EXAMPLE_FATFS_WRITE_COUNT
+        int "Number of volumes"
+        default 1
+        range 1 600
+        help
+            Number of writes to the file (for testing purposes).
+                
+    config EXAMPLE_FATFS_DEFAULT_DATETIME
+        bool "Default modification date and time for generated FATFS image"
+        default n
+        help
+            If default datetime is set, all files created in the generated FATFS partition have default time
+            equal to FATFS origin time (1 January 1980)
+    config EXAMPLE_FATFS_MODE_READ_ONLY
+        bool "Read only mode for generated FATFS image"
+        default n
+        help
+            If read-only mode is set, the generated fatfs image will be raw (without wear levelling support).
+            Otherwise it will support wear levelling that enables read-write mounting.
+        
+    config EXAMPLE_FATFS_WRITE_COUNT
+        int "Number of volumes"
+        default 1
+        range 1 600
+        help
+            Number of writes to the file (for testing purposes).
+        
+    config EXAMPLE_FATFS_DEFAULT_DATETIME
+        bool "Default modification date and time for generated FATFS image"
+        default n
+        help
+            If default datetime is set, all files created in the generated FATFS partition have default time
+            equal to FATFS origin time (1 January 1980)               
 endmenu

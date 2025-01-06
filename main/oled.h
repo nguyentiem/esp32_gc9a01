@@ -9,15 +9,14 @@ extern "C"
 
 #include <stdlib.h>
 #include "gc9a01.h"
-#include "output.h"
 
 
 
 void clearScreen(); 
 void initOLED();
 
-void showBitmapCenter(); 
-
+// void showBitmapCenter(); 
+void showImageFromFile();
 
 #ifdef __cplusplus
 }

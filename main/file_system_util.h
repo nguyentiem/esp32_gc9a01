@@ -7,14 +7,16 @@ extern "C"
 {
 #endif
 #include <stdlib.h>
-#define ImageFile "/spiffs/image.dat"
+    // Mount path for the partition
+#define BASE_FILE "/spiflash"
+#define IMAGE_FILE_PATH "/spiflash/image.dat"
 
-void initFS(); 
-uint8_t WriteFile(const char *filePath, uint8_t *buff, uint32_t offset, uint32_t len); 
-uint8_t ReadFile(const char *filePath, uint8_t *buff , uint32_t offset , uint32_t len); 
-void unmountFS(); 
-uint8_t createFile(const char *filePath, uint32_t s); 
-void checkFile(const char *filePath); 
+    void initFS();
+    uint8_t WriteFile(const char *filePath, uint8_t *buff, uint32_t offset, uint32_t len);
+    uint8_t ReadFile(const char *filePath, uint8_t *buff, uint32_t offset, uint32_t len);
+    void unmountFS();
+    uint8_t createFile(const char *filePath, uint32_t s);
+    void checkFile(const char *filePath);
 #ifdef __cplusplus
 }
 #endif

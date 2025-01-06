@@ -10,7 +10,8 @@
         "algorithm": "c",
         "esp_spiffs.h": "c",
         "oled.h": "c",
-        "output.h": "c"
+        "output.h": "c",
+        "file_system_util.h": "c"
     },
     "idf.flashType": "UART",
     "idf.portWin": "COM3"
