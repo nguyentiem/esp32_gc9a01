@@ -14,13 +14,49 @@
 #include <stdint.h>
 #include "file_system_util.h"
 
-#define LCD HSPI_HOST
-#define PIN_NUM_MISO 19
-#define PIN_NUM_MOSI 23
-#define PIN_NUM_CLK 18
-#define PIN_CS 2
-#define PIN_RST 4
-#define PIN_DC 15
+// config LCD_MOSI_GPIO
+//         int "SPI MOSI GPIO"
+//         default 5
+//         help
+//             GPIO cho MOSI  Native SPI2: GPIO5 (FSPID).
+
+//     config LCD_SCLK_GPIO
+//         int "SPI SCLK GPIO"
+//         default 4
+//         help
+//             GPIO cho SPI clock. Native SPI2: GPIO4 (FSPICLK).
+
+//     config LCD_CS_GPIO
+//         int "SPI CS GPIO"
+//         default 1
+//         help
+//             GPIO cho chip select (active low). Native SPI2: GPIO1 (FSPICS0).
+
+//     config LCD_DC_GPIO
+//         int "Data/Command GPIO"
+//         default 10
+//         help
+//             GPIO D/C: HIGH = data, LOW = command.
+
+//     config LCD_RST_GPIO
+//         int "Reset GPIO"
+//         default 12
+//         help
+//             GPIO reset. Dùng -1 nếu nối trực tiếp VCC (no reset).
+
+//     config LCD_SPI_CLOCK_MHZ
+//         int "SPI clock (MHz)"
+//         default 40
+//         range 1 80
+//         help
+//             Tần số SPI clock, tối đa 80 MHz
+#define LCD SPI2_HOST
+#define PIN_NUM_MISO 22
+#define PIN_NUM_MOSI 5
+#define PIN_NUM_CLK 4
+#define PIN_CS 1
+#define PIN_RST 12
+#define PIN_DC 10
 #define ROW_PER_BUFF 1
 #define BUFF_SIZE (GC9A01_W * 3 * ROW_PER_BUFF) // 240 pixel , 3bytes R,G,B , 1 row/ buff
 
@@ -158,62 +194,62 @@ void clearScreen()
 //     }
 // }
 
-// void copyImageFileToFlash(){
-//     uint32_t offset = 0;
-//     uint32_t totalSize = 172800;
-//     initFS();
-//     checkFile(IMAGE_FILE_PATH);
-//
-//     FILE *f = fopen(IMAGE_FILE_PATH, "wb");
-//     if (f == NULL)
-//     {
-//         ESP_LOGE(TAG, "Failed to open file for writing");
-//         // unmountFS();
-//         return;
-//     }
-//
-//     uint16_t ls[] = {240, 240};
-//
-//     int ret = fseek(f, offset, SEEK_SET);
-//     if (ret != 0)
-//     {
-//         ESP_LOGE(TAG, "eror to seek file error %d", ret);
-//         goto exit;
-//     }
-//
-//     size_t written = fwrite(ls, sizeof(uint8_t), sizeof(ls), f);
-//     if (written != sizeof(ls))
-//     {
-//         ESP_LOGE(TAG, "Write file Fail");
-//         goto exit;
-//     }
-//
-//     while (offset < totalSize)
-//     {
-//
-//         uint16_t len = sizeof(buff) < (totalSize - offset) ? sizeof(buff) : (totalSize - offset);
-//         memcpy(&buff[0], &my_image[offset], len);
-//         ESP_LOGI(TAG, "Write %u bytes at %lu", len, (unsigned long)(offset+sizeof(ls)));
-//         ret = fseek(f, offset + sizeof(ls), SEEK_SET);
-//         if (ret != 0)
-//         {
-//             ESP_LOGE(TAG, "eror to seek file error %d", ret);
-//             break;
-//         }
-//
-//         written = fwrite(buff, sizeof(uint8_t), len, f);
-//         if (written != len)
-//         {
-//             ESP_LOGE(TAG, "Write file Fail");
-//            break;
-//         }
-//         offset += len;
-//     }
-//
-// exit:
-//     fclose(f);
-//     unmountFS();
-// }
+void copyImageFileToFlash(){
+    uint32_t offset = 0;
+    uint32_t totalSize = 172800;
+    initFS();
+    checkFile(IMAGE_FILE_PATH);
+
+    FILE *f = fopen(IMAGE_FILE_PATH, "wb");
+    if (f == NULL)
+    {
+        ESP_LOGE(TAG, "Failed to open file for writing");
+        // unmountFS();
+        return;
+    }
+
+    uint16_t ls[] = {240, 240};
+
+    int ret = fseek(f, offset, SEEK_SET);
+    if (ret != 0)
+    {
+        ESP_LOGE(TAG, "eror to seek file error %d", ret);
+        goto exit;
+    }
+
+    size_t written = fwrite(ls, sizeof(uint8_t), sizeof(ls), f);
+    if (written != sizeof(ls))
+    {
+        ESP_LOGE(TAG, "Write file Fail");
+        goto exit;
+    }
+
+    while (offset < totalSize)
+    {
+
+        uint16_t len = sizeof(buff) < (totalSize - offset) ? sizeof(buff) : (totalSize - offset);
+        memcpy(&buff[0], &my_image[offset], len);
+        ESP_LOGI(TAG, "Write %u bytes at %lu", len, (unsigned long)(offset+sizeof(ls)));
+        ret = fseek(f, offset + sizeof(ls), SEEK_SET);
+        if (ret != 0)
+        {
+            ESP_LOGE(TAG, "eror to seek file error %d", ret);
+            break;
+        }
+
+        written = fwrite(buff, sizeof(uint8_t), len, f);
+        if (written != len)
+        {
+            ESP_LOGE(TAG, "Write file Fail");
+           break;
+        }
+        offset += len;
+    }
+
+exit:
+    fclose(f);
+    unmountFS();
+}
 
 void initOLED()
 {

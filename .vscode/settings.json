@@ -1,18 +1,31 @@
 {
-    "C_Cpp.intelliSenseEngine": "default",
-    "idf.espIdfPathWin": "d:\\Embedded\\esp32\\IDF\\esp-idf-v5.1.1",
-    "idf.toolsPathWin": "C:\\Users\\nguye\\.espressif",
-    "files.associations": {
-        "gc9a01.h": "c",
-        "spi_master.h": "c",
-        "gpio.h": "c",
-        "bitset": "c",
-        "algorithm": "c",
-        "esp_spiffs.h": "c",
-        "oled.h": "c",
-        "output.h": "c",
-        "file_system_util.h": "c"
-    },
-    "idf.flashType": "UART",
-    "idf.portWin": "COM3"
+  "C_Cpp.intelliSenseEngine": "default",
+  "idf.espIdfPathWin": "d:\\Embedded\\esp32\\IDF\\esp-idf-v5.1.1",
+  "idf.toolsPathWin": "C:\\Users\\nguye\\.espressif",
+  "files.associations": {
+    "gc9a01.h": "c",
+    "spi_master.h": "c",
+    "gpio.h": "c",
+    "bitset": "c",
+    "algorithm": "c",
+    "esp_spiffs.h": "c",
+    "oled.h": "c",
+    "output.h": "c",
+    "file_system_util.h": "c"
+  },
+  "idf.flashType": "UART",
+  "idf.portWin": "COM10",
+  "idf.currentSetup": "C:/Espressif/frameworks/esp-idf-v5.5.3/",
+  "idf.openOcdConfigs": [
+    "board/esp32h2-builtin.cfg"
+  ],
+  "idf.customExtraVars": {
+    "IDF_TARGET": "esp32h2"
+  },
+  "clangd.path": "C:\\Espressif\\tools\\esp-clang\\esp-19.1.2_20250312\\esp-clang\\bin\\clangd.exe",
+  "clangd.arguments": [
+    "--background-index",
+    "--query-driver=**",
+    "--compile-commands-dir=d:\\Embedded\\Project\\My_project\\esp32_gc9a01\\build"
+  ]
 }

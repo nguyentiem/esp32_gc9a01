@@ -34,7 +34,7 @@ void app_main(void)
     checkFile(IMAGE_FILE_PATH);
     initOLED();
     clearScreen();
-    showImageFromFile();
+    // showImageFromFile();
 
     while (1)
     {

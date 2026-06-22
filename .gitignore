@@ -1,1 +1,14 @@
 /build/
+.vscode/
+# Ignore build artifacts
+main/build/
+# Ignore object files
+main/*.o
+# Ignore executable files
+main/*.elf
+# Ignore image files
+main/*.bmp
+main/*.jpg
+main/*.png
+# Ignore log files
+main/*.log
