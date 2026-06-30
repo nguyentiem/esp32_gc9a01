@@ -15,7 +15,7 @@ extern "C"
 void clearScreen(); 
 void initOLED();
 
-// void showBitmapCenter(); 
+void showBitmapCenter(); 
 void showImageFromFile();
 
 #ifdef __cplusplus

@@ -13,6 +13,7 @@
 #include "esp_timer.h"
 #include <stdint.h>
 #include "file_system_util.h"
+#include"output.h"
 
 // config LCD_MOSI_GPIO
 //         int "SPI MOSI GPIO"
@@ -51,12 +52,20 @@
 //         help
 //             Tần số SPI clock, tối đa 80 MHz
 #define LCD SPI2_HOST
-#define PIN_NUM_MISO 22
+// #define PIN_NUM_MISO 22
+// #define PIN_NUM_MOSI 5
+// #define PIN_NUM_CLK 4
+// #define PIN_CS 1
+// #define PIN_RST 12
+// #define PIN_DC 10
+////esp32c3 
+#define PIN_NUM_MISO 0xFF
 #define PIN_NUM_MOSI 5
-#define PIN_NUM_CLK 4
-#define PIN_CS 1
-#define PIN_RST 12
-#define PIN_DC 10
+#define PIN_NUM_CLK 9
+#define PIN_CS 0
+#define PIN_RST 0xFF
+#define PIN_DC 20
+
 #define ROW_PER_BUFF 1
 #define BUFF_SIZE (GC9A01_W * 3 * ROW_PER_BUFF) // 240 pixel , 3bytes R,G,B , 1 row/ buff
 
@@ -120,7 +129,7 @@ static void SPIInit()
 {
     esp_err_t ret;
     spi_bus_config_t buscfg = {
-        .miso_io_num = PIN_NUM_MISO,
+        .miso_io_num = -1,
         .mosi_io_num = PIN_NUM_MOSI,
         .sclk_io_num = PIN_NUM_CLK,
         .quadwp_io_num = -1,
@@ -161,38 +170,38 @@ void clearScreen()
     }
 }
 
-// void showBitmapCenter()
-// {
-//     uint32_t count = 0;
-//     uint8_t color[3];
-//     for (int x = 0; x < GC9A01_W; x++)
-//     {
-//         for (int y = 0; y < GC9A01_H; y++)
-//         {
-//             if (x >= GC9A01_W / 2 - IMAGE_W / 2 && x <= GC9A01_W / 2 + IMAGE_W / 2 && y >= GC9A01_H / 2 - IMAGE_H / 2 && y <= GC9A01_H / 2 + IMAGE_H / 2)
-//             {
-//                 color[0] = my_image[count++];
-//                 color[1] = my_image[count++];
-//                 color[2] = my_image[count++];
-//             }
-//             else
-//             {
-//                 color[0] = 0;
-//                 color[1] = 0;
-//                 color[2] = 0;
-//             }
-//
-//             if (x == 0 && y == 0)
-//             {
-//                 GC9A01_write(color, sizeof(color));
-//             }
-//             else
-//             {
-//                 GC9A01_write_continue(color, sizeof(color));
-//             }
-//         }
-//     }
-// }
+void showBitmapCenter()
+{
+    uint32_t count = 0;
+    uint8_t color[3];
+    for (int x = 0; x < GC9A01_W; x++)
+    {
+        for (int y = 0; y < GC9A01_H; y++)
+        {
+            if (x >= GC9A01_W / 2 - IMAGE_W / 2 && x <= GC9A01_W / 2 + IMAGE_W / 2 && y >= GC9A01_H / 2 - IMAGE_H / 2 && y <= GC9A01_H / 2 + IMAGE_H / 2)
+            {
+                color[0] = my_image[count++];
+                color[1] = my_image[count++];
+                color[2] = my_image[count++];
+            }
+            else
+            {
+                color[0] = 0;
+                color[1] = 0;
+                color[2] = 0;
+            }
+
+            if (x == 0 && y == 0)
+            {
+                GC9A01_write(color, sizeof(color));
+            }
+            else
+            {
+                GC9A01_write_continue(color, sizeof(color));
+            }
+        }
+    }
+}
 
 void copyImageFileToFlash(){
     uint32_t offset = 0;
@@ -254,7 +263,7 @@ exit:
 void initOLED()
 {
     SPIInit();
-    lcdInit(configOLEDPin, setPinLevel, delay, sendSPI, PIN_CS, PIN_RST, 0, PIN_DC);
+    lcdInit(configOLEDPin, setPinLevel, delay, sendSPI, PIN_CS, 0xFF, 0xFF, PIN_DC);
     setFrame(0, 0, GC9A01_W, GC9A01_H);
 }
 

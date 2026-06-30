@@ -14,13 +14,13 @@
     "file_system_util.h": "c"
   },
   "idf.flashType": "UART",
-  "idf.portWin": "COM10",
+  "idf.portWin": "COM3",
   "idf.currentSetup": "C:/Espressif/frameworks/esp-idf-v5.5.3/",
   "idf.openOcdConfigs": [
-    "board/esp32h2-builtin.cfg"
+    "board/esp32c3-builtin.cfg"
   ],
   "idf.customExtraVars": {
-    "IDF_TARGET": "esp32h2"
+    "IDF_TARGET": "esp32c3"
   },
   "clangd.path": "C:\\Espressif\\tools\\esp-clang\\esp-19.1.2_20250312\\esp-clang\\bin\\clangd.exe",
   "clangd.arguments": [

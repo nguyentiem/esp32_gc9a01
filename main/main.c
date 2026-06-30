@@ -30,12 +30,12 @@ extern void delay(uint32_t ms);
 void app_main(void)
 {
      ESP_LOGI(TAG, "Start main app");
-    initFS();
-    checkFile(IMAGE_FILE_PATH);
+    // initFS();
+    // checkFile(IMAGE_FILE_PATH);
     initOLED();
     clearScreen();
     // showImageFromFile();
-
+    showBitmapCenter();
     while (1)
     {
 

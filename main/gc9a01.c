@@ -7,6 +7,19 @@
 #define NULL '\0'
 static oled gc9a01;
 
+static bool isPinUsed(uint8_t pin)
+{
+    return pin != 0xFF;
+}
+
+static void setPinIfUsed(uint8_t pin, uint32_t level)
+{
+    if (isPinUsed(pin))
+    {
+        gc9a01.setPin(pin, level);
+    }
+}
+
 // static uint8_t bitMapBuff[MAX_BIT_MAP_BUFF_SIZE];
 
 const command initCommand[] = {
@@ -85,11 +98,11 @@ static void sendData(uint8_t *buff, uint32_t len)
 {
     if (len > 0 && buff != NULL)
     {
-        gc9a01.setPin(gc9a01.DC, 1);
-        gc9a01.setPin(gc9a01.CS, 0);
+        setPinIfUsed(gc9a01.DC, 1);
+        setPinIfUsed(gc9a01.CS, 0);
         gc9a01.send(buff, len);
-        gc9a01.setPin(gc9a01.CS, 1);
-        gc9a01.setPin(gc9a01.DC, 0);
+        setPinIfUsed(gc9a01.CS, 1);
+        setPinIfUsed(gc9a01.DC, 0);
     }
     return;
 }
@@ -97,9 +110,9 @@ static void sendData(uint8_t *buff, uint32_t len)
 static void sendCommand(uint8_t command, uint8_t *buff, uint32_t len)
 {
 
-    gc9a01.setPin(gc9a01.CS, 0);
+    setPinIfUsed(gc9a01.CS, 0);
     gc9a01.send(&command, 1);
-    gc9a01.setPin(gc9a01.CS, 1);
+    setPinIfUsed(gc9a01.CS, 1);
     sendData(buff, len);
    
 
@@ -140,11 +153,11 @@ static void sendCommand(uint8_t command, uint8_t *buff, uint32_t len)
 
  bool gc9a01_reset(bool hardReset)
 {
-    if (hardReset && gc9a01.RST != 0)
+    if (hardReset && isPinUsed(gc9a01.RST))
     {
-        gc9a01.setPin(gc9a01.RST, 1);
+        setPinIfUsed(gc9a01.RST, 1);
         gc9a01.delay(10);
-        gc9a01.setPin(gc9a01.RST, 0);
+        setPinIfUsed(gc9a01.RST, 0);
         gc9a01.delay(10);
     }
     else
@@ -157,7 +170,7 @@ static void sendCommand(uint8_t command, uint8_t *buff, uint32_t len)
 
 bool lcdInit(configPin cfgPin, setPin setPin, delayms dl_ms, spiSend snd, uint8_t cs, uint8_t rst, uint8_t bl, uint8_t dc)
 {
-    if (!cfgPin || !setPin || !dl_ms || !snd || !cs)
+    if (!cfgPin || !setPin || !dl_ms || !snd)
     {
         return false;
     }
@@ -170,35 +183,42 @@ bool lcdInit(configPin cfgPin, setPin setPin, delayms dl_ms, spiSend snd, uint8_
     gc9a01.CS = cs;
     gc9a01.DC = dc;
 
-    if (gc9a01.configPin && gc9a01.BL)
+    if (gc9a01.configPin && isPinUsed(gc9a01.BL))
     {
         gc9a01.configPin(gc9a01.BL);
     }
 
-    if (gc9a01.configPin && gc9a01.RST)
+    if (gc9a01.configPin && isPinUsed(gc9a01.RST))
     {
         gc9a01.configPin(gc9a01.RST);
     }
 
-    if (gc9a01.configPin && gc9a01.CS)
+    if (gc9a01.configPin && isPinUsed(gc9a01.CS))
     {
         gc9a01.configPin(gc9a01.CS);
     }
 
-    if (gc9a01.configPin && gc9a01.DC)
+    if (gc9a01.configPin && isPinUsed(gc9a01.DC))
     {
         gc9a01.configPin(gc9a01.DC);
     }
     // sendCommand(LCD_CMD_SLPOUT, NULL, 0);
-   gc9a01.setPin(gc9a01.DC, 0);
-     gc9a01.delay(1000);
+    setPinIfUsed(gc9a01.DC, 0);
+    gc9a01.delay(1000);
 
-    gc9a01.setPin(gc9a01.CS, 1);
+    setPinIfUsed(gc9a01.CS, 1);
     gc9a01.delay(5);
-
-    gc9a01.setPin(gc9a01.RST, 0);
-    gc9a01.delay(10);
-    gc9a01.setPin(gc9a01.RST, 1);
+    if (gc9a01.configPin && isPinUsed(gc9a01.RST))
+    {
+        setPinIfUsed(gc9a01.RST, 0);
+        gc9a01.delay(10);
+        setPinIfUsed(gc9a01.RST, 1);
+    }
+    else
+    {
+        sendCommand(LCD_CMD_SWRESET, NULL, 0);
+        gc9a01.delay(20);
+    }
 
     gc9a01.delay(120);
 
@@ -206,12 +226,6 @@ bool lcdInit(configPin cfgPin, setPin setPin, delayms dl_ms, spiSend snd, uint8_
     int numCmd = sizeof(initCommand) / sizeof(command);
     for (int i = 0; i < numCmd; i++)
     {
-        // GC9A01_write_command(initCommand[i].command);
-        // if(initCommand[i].paramLen > 0){
-        //    for(int j =0 ; j< initCommand[i].paramLen; j++){
-        //     GC9A01_write_byte(*((uint8_t*)((uint8_t*)initCommand[i].param +j)));
-        //    }
-        // }
         sendCommand(initCommand[i].command, initCommand[i].param, initCommand[i].paramLen);
     }
     sendCommand(LCD_CMD_SLPOUT,NULL, 0);
